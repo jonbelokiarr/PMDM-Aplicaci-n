@@ -1,7 +1,10 @@
 package com.example.pmdm_aplicacion;
 
+import android.Manifest;
 import android.os.Bundle;
 
+import com.frosquivel.magicalcamera.MagicalCamera;
+import com.frosquivel.magicalcamera.MagicalPermissions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
@@ -15,7 +18,10 @@ import android.view.View;
 
 import com.example.pmdm_aplicacion.ui.main.SectionsPagerAdapter;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+    private MagicalPermissions magicalPermissions;
+    private final static int pixeles = 50;
+    private MagicalCamera magicalCamera;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,5 +41,20 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        findViewById(R.id.button3).setOnClickListener(this);
+
+        String[] permisos = new String[] {
+                Manifest.permission.CAMERA,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+        };
+        magicalPermissions = new MagicalPermissions(this, permisos);
+        magicalCamera = new MagicalCamera(this, pixeles, magicalPermissions);
+    }
+
+    @Override
+    public void onClick(View v) {
+        magicalCamera.takePhoto();
     }
 }
