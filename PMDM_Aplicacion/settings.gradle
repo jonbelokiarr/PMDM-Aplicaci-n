@@ -1,2 +1,2 @@
-rootProject.name='PMDM-Aplicacion'
+rootProject.name='PMDM_Aplicacion'
 include ':app'
