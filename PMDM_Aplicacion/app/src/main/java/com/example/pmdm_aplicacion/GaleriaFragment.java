@@ -1,4 +1,4 @@
-package com.example.pmdm_aplicacion.fragments;
+package com.example.pmdm_aplicacion;
 
 import android.os.Bundle;
 
@@ -8,14 +8,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.pmdm_aplicacion.R;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CompartirFragment extends Fragment {
+public class GaleriaFragment extends Fragment {
 
-    public CompartirFragment() {
+    public GaleriaFragment() {
         // Required empty public constructor
     }
 
@@ -24,6 +23,6 @@ public class CompartirFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_compartir, container, false);
+        return inflater.inflate(R.layout.fragment_galeria, container, false);
     }
 }

@@ -2,20 +2,18 @@ package com.example.pmdm_aplicacion;
 
 import android.Manifest;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
+import android.widget.Button;
 
-import com.example.pmdm_aplicacion.fragments.CamaraFragment;
-import com.example.pmdm_aplicacion.fragments.CompartirFragment;
-import com.example.pmdm_aplicacion.fragments.GaleriaFragment;
 import com.frosquivel.magicalcamera.MagicalCamera;
 import com.frosquivel.magicalcamera.MagicalPermissions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
+import androidx.annotation.NonNull;
 import androidx.core.view.GravityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
@@ -26,7 +24,8 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
+
     private AppBarConfiguration mAppBarConfiguration;
     private MagicalPermissions magicalPermisos;
     private final static int tamaño = 50;
@@ -54,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow)
                 .setDrawerLayout(drawer)
                 .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment); /*ME FALLA AQUI*/
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
@@ -62,8 +61,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .beginTransaction()
                 .add(R.id.contenedor, new CamaraFragment())
                 .commit();
-
-        findViewById(R.id.button2).setOnClickListener(this);
 
         String[] permisos = new String[] {
                 Manifest.permission.CAMERA,
@@ -73,6 +70,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         magicalPermisos = new MagicalPermissions(this, permisos);
 
         magicalCamera = new MagicalCamera(this, tamaño, magicalPermisos);
+
+        findViewById(R.id.botonCamara).setOnClickListener(this); /*AQUÍ ME DA NullPointerException Y NO SE PORQUE ES, LLEVO ASÍ DESDE AYER POR LA MAÑANA.*/
     }
 
     @Override
@@ -84,12 +83,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment); /*ME FALLA AQUI*/
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
     }
 
-    public boolean onNavigationItemSelected(MenuItem item) {
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         Fragment f = null;
 
@@ -102,14 +102,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         else if (id == R.id.nav_slideshow) {
             f = new CompartirFragment();
         }
+
+        if (f != null) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.contenedor, f)
+                    .commit();
+        }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
-
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.contenedor, f)
-                .commit();
-
         return true;
     }
 
